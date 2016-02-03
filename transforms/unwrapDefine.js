@@ -2,7 +2,7 @@ var importTransforms = [
   require('./basicImports'),
   require('./rawImports'),
   require('./propertyImports'),
-  require('./descructuredImports')
+  require('./destructuredImports')
 ]
 
 module.exports = function (contents) {

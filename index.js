@@ -20,7 +20,7 @@ vfs.src([
 .pipe(mapContent(require('./transforms/basicImports')))
 .pipe(mapContent(require('./transforms/propertyImports')))
 .pipe(mapContent(require('./transforms/rawImports')))
-.pipe(mapContent(require('./transforms/descructuredImports')))
+.pipe(mapContent(require('./transforms/destructuredImports')))
 .pipe(mapContent(require('./transforms/hoistPrivateProviders')))
 .pipe(mapContent(require('./transforms/unwrapDefine')))
 .pipe(vfs.dest('src'));
