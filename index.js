@@ -23,4 +23,5 @@ vfs.src([
 .pipe(mapContent(require('./transforms/destructuredImports')))
 .pipe(mapContent(require('./transforms/hoistPrivateProviders')))
 .pipe(mapContent(require('./transforms/unwrapDefine')))
+.pipe(mapContent(require('./transforms/moveInlineImports')))
 .pipe(vfs.dest('src'));
