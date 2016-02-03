@@ -1,28 +1,47 @@
 var _ = require('lodash');
 var injectNewImports = require('../lib/injectNewImports');
+
+var templateRE = /((template|editor)\:\s*)require\(('[^']+\.html')\)/g;
+
 var replacements = [
-  ['ui/routes', 'UiRoutes'],
-  ['ui/modules', 'UiModules']
+  { module: 'ui/routes', newName: 'uiRoutes' },
+  { module: 'ui/modules', newName: 'uiModules' },
+  { module: 'ui/registry/_registry', newName: 'UiRegistry' },
+  { module: 'ui/stringify/types/Url', newName: 'stringifyUrl' },
+  { module: 'ui/stringify/types/Bytes', newName: 'stringifyBytes' },
+  { module: 'ui/stringify/types/Date', newName: 'stringifyDate' },
+  { module: 'ui/stringify/types/Ip', newName: 'stringifyIp' },
+  { module: 'ui/stringify/types/Number', newName: 'stringifyNumber' },
+  { module: 'ui/stringify/types/Percent', newName: 'stringifyPercent' },
+  { module: 'ui/stringify/types/String', newName: 'stringifyString' },
+  { module: 'ui/stringify/types/Source', newName: 'stringifySource' },
+  { module: 'ui/stringify/types/Color', newName: 'stringifyColor' },
+  { module: 'ui/stringify/types/truncate', newName: 'stringifytruncate' },
 ];
+
+replacements.forEach(function (r) {
+  r.re = new RegExp(`require\\('${_.escapeRegExp(r.module)}'\\)`, 'g');
+});
 
 module.exports = function (contents) {
   var newImports = [];
 
-  replacements.forEach(function (pair) {
-    var module = pair[0];
-    var newName = pair[1];
-
+  replacements.forEach(function (r) {
     var found = false;
-    var re = new RegExp(`require\\('${_.escapeRegExp(module)}'\\)`, 'g');
-    contents = contents.replace(re, function () {
+    contents = contents.replace(r.re, function () {
       if (!found) {
         found = true;
-        newImports.push(`import ${newName} from '${module}';`);
+        newImports.push(`import ${r.newName} from '${r.module}';`);
       }
 
-      return newName;
+      return r.newName;
     });
   })
+
+  contents = contents.replace(templateRE, function (all, property, name, location) {
+    newImports.push(`import ${name} from ${location}`);
+    return `${property}${name}`;
+  });
 
   return injectNewImports(newImports, contents);
 }
