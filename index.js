@@ -15,7 +15,8 @@ vfs.src([
   'src/**/*.js',
   '!src/optimize/babelOptions.js',
   '!src/cli/index.js',
-  '!src/plugins/testsBundle/testsEntryTemplate.js'
+  '!src/plugins/testsBundle/testsEntryTemplate.js',
+  '!src/ui/app_entry_template.js',
 ])
 .pipe(mapContent(require('./transforms/imports')))
 .pipe(mapContent(require('./transforms/hoistPrivateProviders')))
