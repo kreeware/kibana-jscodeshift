@@ -3,7 +3,12 @@ var toProviderName = require('../lib/toProviderName');
 var PrivateRE = /\bPrivate\(require\('([^']+)'\)\)/g;
 var importRE = /^import/mg;
 
-module.exports = function (contents) {
+module.exports = function (contents, file) {
+  if (file.path.endsWith('src/ui/public/private/private.js')) {
+    // don't transform the private service, our dumb regexp break in the comments
+    return contents;
+  }
+
   var newImports = [];
 
   contents = contents.replace(PrivateRE, function (all, location) {

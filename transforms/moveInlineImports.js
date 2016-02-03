@@ -6,7 +6,7 @@ var templateRE = /((template|editor)\:\s*)require\(('[^']+\.html')\)/g;
 var replacements = [
   { module: 'ui/routes', newName: 'uiRoutes' },
   { module: 'ui/modules', newName: 'uiModules' },
-  { module: 'ui/registry/_registry', newName: 'UiRegistry' },
+  { module: 'ui/registry/_registry', newName: 'uiRegistry' },
   { module: 'ui/stringify/types/Url', newName: 'stringifyUrl' },
   { module: 'ui/stringify/types/Bytes', newName: 'stringifyBytes' },
   { module: 'ui/stringify/types/Date', newName: 'stringifyDate' },
@@ -16,7 +16,7 @@ var replacements = [
   { module: 'ui/stringify/types/String', newName: 'stringifyString' },
   { module: 'ui/stringify/types/Source', newName: 'stringifySource' },
   { module: 'ui/stringify/types/Color', newName: 'stringifyColor' },
-  { module: 'ui/stringify/types/truncate', newName: 'stringifytruncate' },
+  { module: 'ui/stringify/types/truncate', newName: 'stringifyTruncate' }
 ];
 
 replacements.forEach(function (r) {
@@ -39,8 +39,8 @@ module.exports = function (contents) {
   })
 
   contents = contents.replace(templateRE, function (all, property, name, location) {
-    newImports.push(`import ${name} from ${location}`);
-    return `${property}${name}`;
+    newImports.push(`import ${name} from ${location};`);
+    return `${name}`;
   });
 
   return injectNewImports(newImports, contents);
