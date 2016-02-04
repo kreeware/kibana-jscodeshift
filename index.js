@@ -17,9 +17,11 @@ vfs.src([
   '!src/cli/index.js',
   '!src/plugins/testsBundle/testsEntryTemplate.js',
   '!src/ui/app_entry_template.js',
+  '!src/cli/{cluster,serve}/**/*',
 ])
 .pipe(mapContent(require('./transforms/imports')))
 .pipe(mapContent(require('./transforms/hoistPrivateProviders')))
 .pipe(mapContent(require('./transforms/unwrapDefine')))
 .pipe(mapContent(require('./transforms/moveInlineImports')))
+.pipe(mapContent(require('./transforms/exports')))
 .pipe(vfs.dest('src'));

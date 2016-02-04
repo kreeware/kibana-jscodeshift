@@ -39,8 +39,16 @@ module.exports = function (contents) {
   })
 
   contents = contents.replace(templateRE, function (all, property, name, location) {
-    newImports.push(`import ${name} from ${location};`);
-    return `${name}`;
+    var varName = _.chain(location)
+    .split(/\/|\./)
+    .slice(-2, -1)
+    .map(_.camelCase)
+    .concat('Template')
+    .join('')
+    .value();
+
+    newImports.push(`import ${varName} from ${location};`);
+    return `${name}: ${varName}`;
   });
 
   return injectNewImports(newImports, contents);

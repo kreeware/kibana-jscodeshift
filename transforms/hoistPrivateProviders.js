@@ -40,7 +40,7 @@ module.exports = function (contents, file) {
 
   if (lastMatch) {
     var lastImportEOL = contents.indexOf('\n', lastMatch.index) + 1;
-    prefix = contents.slice(0, lastImportEOL) + '\n';
+    prefix = contents.slice(0, lastImportEOL);
     postFix = contents.slice(lastImportEOL);
   } else {
     postFix = '\n' + contents;
