@@ -11,17 +11,30 @@ function mapContent(fn) {
   })
 }
 
+
 vfs.src([
   'src/**/*.js',
   '!src/optimize/babelOptions.js',
   '!src/cli/index.js',
   '!src/plugins/testsBundle/testsEntryTemplate.js',
   '!src/ui/app_entry_template.js',
-  '!src/cli/{cluster,serve}/**/*',
+  '!src/cli/{cluster,serve}/**/*'
 ])
 .pipe(mapContent(require('./transforms/imports')))
 .pipe(mapContent(require('./transforms/hoistPrivateProviders')))
 .pipe(mapContent(require('./transforms/unwrapDefine')))
 .pipe(mapContent(require('./transforms/moveInlineImports')))
 .pipe(mapContent(require('./transforms/exports')))
-.pipe(vfs.dest('src'));
+.pipe(vfs.dest('src'))
+.on('end', function () {
+
+  vfs.src([
+    'src/**/*',
+    'tasks/**/*',
+    'test/**/*',
+    '!src/ui/public/styles/fonts/**/*'
+  ], { base: process.cwd(), dot: true })
+  .pipe(require('./transforms/snakecaseFilenames')())
+  .pipe(vfs.dest('.'));
+
+});
