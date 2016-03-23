@@ -14,9 +14,9 @@ function mapContent(fn) {
 
 vfs.src([
   'src/**/*.js',
-  '!src/optimize/babelOptions.js',
+  '!src/optimize/babel_options.js',
   '!src/cli/index.js',
-  '!src/plugins/testsBundle/testsEntryTemplate.js',
+  '!src/plugins/tests_bundle/tests_entry_template.js',
   '!src/ui/app_entry_template.js',
   '!src/cli/{cluster,serve}/**/*'
 ])
@@ -32,7 +32,8 @@ vfs.src([
     'src/**/*',
     'tasks/**/*',
     'test/**/*',
-    '!src/ui/public/styles/fonts/**/*'
+    '!src/ui/public/styles/fonts/**/*',
+    '!tasks/config/**/*'
   ], { base: process.cwd(), dot: true })
   .pipe(require('./transforms/snakecaseFilenames')())
   .pipe(vfs.dest('.'));
