@@ -1,20 +1,29 @@
 {
-  "name": "kibana-module-transforms",
+  "name": "kbn-transforms",
+  "private": true,
   "version": "0.0.0",
+  "description": "code transformations used to keep Kibana current",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "babel -d dist -D src",
+    "dev": "npm run build -- --watch"
   },
-  "keywords": [],
+  "keywords": [
+    "jscodeshift"
+  ],
   "author": "Spencer Alger <email@spalger.com>",
-  "license": "Apache-2.0",
-  "dependencies": {
-    "lodash": "^4.2.0",
-    "through2": "^2.0.0",
-    "vinyl-fs": "^2.3.1"
-  },
+  "license": "MIT",
   "devDependencies": {
-    "eslint": "^1.10.3"
+    "@spalger/babel-presets": "0.0.1",
+    "@spalger/eslint-config-personal": "^0.4.0",
+    "babel-cli": "^6.10.1",
+    "babel-eslint": "^6.0.4",
+    "eslint": "^2.12.0",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.8.1",
+    "eslint-plugin-jsx-a11y": "^1.4.2",
+    "eslint-plugin-react": "^5.1.1",
+    "jscodeshift": "^0.3.20"
   },
-  "description": ""
+  "dependencies": {}
 }
