@@ -17,6 +17,7 @@
   "dependencies": {
     "@spalger/babel-presets": "0.0.1",
     "@spalger/eslint-config-personal": "^0.4.0",
+    "ava": "^0.16.0",
     "babel-cli": "^6.10.1",
     "babel-eslint": "^6.0.4",
     "babel-register": "^6.9.0",
@@ -39,5 +40,6 @@
       "babel-register"
     ],
     "babel": "inherit"
-  }
+  },
+  "devDependencies": {}
 }
