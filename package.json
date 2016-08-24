@@ -1,45 +1,40 @@
 {
-  "name": "kbn-transforms",
+  "name": "kibana-jscodeshift",
   "private": true,
-  "version": "0.0.0",
-  "description": "code transformations used to keep Kibana current",
-  "main": "index.js",
+  "description": "jscodeshift transformations used on Kibana",
   "scripts": {
-    "build": "babel -d dist -D src",
-    "dev": "npm run build -- --watch",
     "test": "ava"
   },
   "keywords": [
     "jscodeshift"
   ],
   "author": "Spencer Alger <email@spalger.com>",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "dependencies": {
-    "@spalger/babel-presets": "0.0.1",
+    "@spalger/babel-presets": "^0.3.2",
     "@spalger/eslint-config-personal": "^0.4.0",
-    "ava": "^0.16.0",
-    "babel-cli": "^6.10.1",
     "babel-eslint": "^6.0.4",
-    "babel-register": "^6.9.0",
     "eslint": "^2.12.0",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-plugin-import": "^1.8.1",
     "eslint-plugin-jsx-a11y": "^1.4.2",
     "eslint-plugin-react": "^5.1.1",
-    "jscodeshift": "^0.3.20",
-    "mocha": "^2.5.3"
+    "jscodeshift": "^0.3.20"
   },
   "ava": {
     "files": [
-      "transforms/**/__tests__/**/*.js"
+      "transforms/**/*.spec.js"
     ],
     "source": [
-      "transforms/**/*.js"
+      "transforms/**/*.js",
+      "!transforms/**/*.spec.js"
     ],
     "require": [
       "babel-register"
     ],
     "babel": "inherit"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "ava": "^0.16.0"
+  }
 }

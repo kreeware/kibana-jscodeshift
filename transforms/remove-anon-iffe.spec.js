@@ -3,14 +3,18 @@
 import jscodeshift from 'jscodeshift'
 import test from 'ava'
 
-import removeAnonIffe from '../removeAnonIffe'
+import removeAnonIffe from './remove-anon-iffe'
 
-const transform = source => removeAnonIffe({
-  source,
-  path: 'some test file',
+const api = {
   jscodeshift,
   stats: () => {},
-})
+}
+
+const transform = source =>
+  removeAnonIffe(
+    { source, path: 'some test file' },
+    api
+  )
 
 test('removes IIFE wrappers that have and take no arguments', t => {
   t.is(

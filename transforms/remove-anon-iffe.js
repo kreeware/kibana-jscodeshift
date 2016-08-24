@@ -1,11 +1,11 @@
-export default ({ jscodeshift, source }) => {
-  const { CallExpression, FunctionExpression } = jscodeshift.types.namedTypes
+export default (file, api) => {
+  const j = api.jscodeshift
 
   const replace = ex => {
     // we only care about CallExpression...
     const callPath = ex.get('expression')
     const call = callPath.node
-    if (!CallExpression.check(call)) return false
+    if (!j.CallExpression.check(call)) return false
 
     // ...that don't pass any arguments...
     if (call.arguments.length > 0) return false
@@ -13,7 +13,7 @@ export default ({ jscodeshift, source }) => {
     // ...to FunctionExpressions...
     const fnPath = callPath.get('callee')
     const fn = fnPath.node
-    if (!FunctionExpression.check(fn)) return false
+    if (!j.FunctionExpression.check(fn)) return false
 
     // ...that don't receive any arguments
     if (fn.params.length > 0) return false
@@ -21,9 +21,9 @@ export default ({ jscodeshift, source }) => {
     return fnPath.get('body', 'body').value
   }
 
-  return jscodeshift(source)
+  return j(file.source)
   .forEach(root => {
-    jscodeshift.types.visit(root, {
+    j.types.visit(root, {
       visitExpressionStatement(path) {
         const replacements = replace(path)
         if (replacements) {

@@ -1,17 +1,9 @@
-export default ({ jscodeshift, source }) => {
-  const {
-    CallExpression,
-    Identifier,
-    VariableDeclarator,
-    ObjectPattern,
-    VariableDeclaration,
-    importDeclaration,
-    importSpecifier,
-  } = jscodeshift
+export default (file, api) => {
+  const j = api.jscodeshift
 
   const isRequireCall = node =>
-    CallExpression.check(node) &&
-    Identifier.check(node.callee) &&
+    j.CallExpression.check(node) &&
+    j.Identifier.check(node.callee) &&
     node.callee.type === 'Identifier' &&
     node.callee.name === 'require' &&
     node.arguments.length === 1 &&
@@ -22,18 +14,18 @@ export default ({ jscodeshift, source }) => {
     node.declarations.length === 1 &&
     node.kind === 'const' &&
     node.declarations.every(dec => (
-      VariableDeclarator.check(dec) &&
-      ObjectPattern.check(dec.id) &&
+      j.VariableDeclarator.check(dec) &&
+      j.ObjectPattern.check(dec.id) &&
       isRequireCall(dec.init)
     ))
 
-  return jscodeshift(source)
-    .find(VariableDeclaration, isDestructuringRequireStatement)
+  return j(file.source)
+    .find(j.VariableDeclaration, isDestructuringRequireStatement)
     .replaceWith(path => {
       const dec = path.value.declarations[0]
-      return importDeclaration(
+      return j.importDeclaration(
         dec.id.properties.map(prop =>
-          importSpecifier(prop.key, prop.value)
+          j.importSpecifier(prop.key, prop.value)
         ),
         dec.init.arguments[0]
       )

@@ -1,14 +1,18 @@
 import jscodeshift from 'jscodeshift'
 import test from 'ava'
 
-import destructuringRequireToImport from '../destructuringRequireToImport'
+import destructuringRequireToImport from './destructuring-require-to-import'
 
-const transform = source => destructuringRequireToImport({
-  source,
-  path: 'some test file',
+const api = {
   jscodeshift,
   stats: () => {},
-})
+}
+
+const transform = source =>
+  destructuringRequireToImport(
+    { source, path: 'some test file' },
+    api
+  )
 
 test('rewrites requires with a single target', t => {
   t.is(
