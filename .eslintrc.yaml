@@ -3,3 +3,4 @@
 extends: "@spalger/personal/es6"
 rules:
   no-console: off
+  quotes: [error, single, { "avoidEscape": true, allowTemplateLiterals: true }]
