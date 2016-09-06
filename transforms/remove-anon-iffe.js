@@ -18,6 +18,9 @@ export default (file, api) => {
     // ...that don't receive any arguments
     if (fn.params.length > 0) return false
 
+    // ...or have a name
+    if (fn.id && fn.id.name) return false
+
     return fnPath.get('body', 'body').value
   }
 

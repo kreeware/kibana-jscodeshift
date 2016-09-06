@@ -1,4 +1,4 @@
-import { closest, eslint } from '../lib'
+import { eslint, closest, shouldIgnoreNode } from '../lib'
 
 export default (file, api) => {
   if (eslint.cli.isPathIgnored(file.path)) {
@@ -16,7 +16,7 @@ export default (file, api) => {
     node.arguments[0].type === 'Literal' &&
     typeof node.arguments[0].value === 'string'
 
-  const isRequireDeclaration = node =>
+  const isRequireDeclarator = node =>
     j.VariableDeclarator.check(node) &&
     isRequireCall(node.init)
 
@@ -38,12 +38,16 @@ export default (file, api) => {
     .filter(path => {
       const { node } = path
 
-      if (!node.declarations.some(isRequireDeclaration)) {
+      if (shouldIgnoreNode(node)) {
+        return false
+      }
+
+      if (!node.declarations.some(isRequireDeclarator)) {
         api.stats('non-require starndard variable declaration')
         return false
       }
 
-      if (!node.declarations.every(isRequireDeclaration)) {
+      if (!node.declarations.every(isRequireDeclarator)) {
         api.stats('variable declaration with mixed require and non-require declarations')
         return false
       }

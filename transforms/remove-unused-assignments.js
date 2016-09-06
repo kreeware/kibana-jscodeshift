@@ -17,7 +17,7 @@ export default (file, api) => {
     }
   }
 
-  const { program, unusedVars } = initUnusedVars(j, file)
+  const { program, unusedVars } = initUnusedVars(j, file.path, file.source)
   if (!program) return file.source
 
   unusedVars.forEach(({ path, message }) => {
