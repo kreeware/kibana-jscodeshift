@@ -9,7 +9,7 @@ export default (file, api) => {
   const j = api.jscodeshift
 
   function applyFix(source) {
-    const { program, unusedVars } = initUnusedVars(j, file.path, source)
+    const { program, unusedVars, stripUndefinedVars } = initUnusedVars(j, file.path, source)
     if (!unusedVars) return false
 
     const removeParam = (fn, param) => {
@@ -89,7 +89,7 @@ export default (file, api) => {
       }
     })
 
-    return program.toSource()
+    return stripUndefinedVars(program.toSource())
   }
 
   return (function doPass(source) {

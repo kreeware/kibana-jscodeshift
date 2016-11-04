@@ -3,7 +3,7 @@ import { initUnusedVars, closest } from '../lib'
 export default (file, api) => {
   const j = api.jscodeshift
 
-  const { program, unusedVars } = initUnusedVars(j, file.path, file.source)
+  const { program, unusedVars, stripUndefinedVars } = initUnusedVars(j, file.path, file.source)
   if (!unusedVars) return file.source
 
   unusedVars.forEach(({ path }) => {
@@ -37,5 +37,5 @@ export default (file, api) => {
     }
   })
 
-  return program.toSource()
+  return stripUndefinedVars(program.toSource())
 }
