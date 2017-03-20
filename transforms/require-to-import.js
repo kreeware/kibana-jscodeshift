@@ -1,20 +1,26 @@
-import { eslint, closest, shouldIgnoreNode } from '../lib'
+import { closest, shouldIgnoreNode, shouldIgnoreFile } from '../lib'
 
 export default (file, api) => {
-  if (eslint.cli.isPathIgnored(file.path)) {
+  if (shouldIgnoreFile(file)) {
     return undefined
   }
 
   const j = api.jscodeshift
 
+  const isRequireNode = node =>
+    j.Identifier.check(node) &&
+    node.type === 'Identifier' &&
+    node.name === 'require'
+
+  const isStringLiteralNode = node =>
+    node.type === 'Literal' &&
+    typeof node.value === 'string'
+
   const isRequireCall = node =>
     j.CallExpression.check(node) &&
-    j.Identifier.check(node.callee) &&
-    node.callee.type === 'Identifier' &&
-    node.callee.name === 'require' &&
+    isRequireNode(node.callee) &&
     node.arguments.length === 1 &&
-    node.arguments[0].type === 'Literal' &&
-    typeof node.arguments[0].value === 'string'
+    isStringLiteralNode(node.arguments[0])
 
   const isRequireDeclarator = node =>
     j.VariableDeclarator.check(node) &&
@@ -36,7 +42,25 @@ export default (file, api) => {
   const subjectDeclarations = program
     .find(j.VariableDeclaration)
     .filter(path => {
+      let cursor = path
+      do {
+        const containingFunc = closest([j.Function], cursor)
+
+        // remove all paths where require is defined as a parameter to a containing function
+        if (containingFunc && containingFunc.node.params.some(isRequireNode)) {
+          console.log('path is within a function that injects require', file.path)
+          return false
+        }
+
+        cursor = containingFunc
+      } while (cursor && !j.Program.check(cursor.parent.node))
+
+      return true
+    })
+    .filter(path => {
       const { node } = path
+
+      debugger
 
       if (shouldIgnoreNode(node)) {
         return false
