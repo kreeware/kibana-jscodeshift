@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-FILES="$(cat ../kibana-jscodeshift/all-files)"
+FILES="$(../kibana-jscodeshift/get-all-files.sh)"
 
 # eslint --fix $FILES --quiet
 jscodeshift -t ../kibana-jscodeshift/transforms/remove-anon-iffe.js $FILES
