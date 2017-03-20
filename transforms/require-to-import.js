@@ -89,13 +89,16 @@ export default (file, api) => {
   subjectDeclarations.forEach(path => {
     const declarations = path.node.declarations.map(mapToImportDeclaration)
 
+    if (path.node.comments) {
+      declarations[0].comments = path.node.comments
+    }
+
     if (j.Program.check(path.parent.node)) {
       path.replace(...declarations)
       return
     }
 
     const prog = closest([j.Program], path)
-    debugger
 
     // remove existing declarations, we'll put them at the top level
     path.prune()
