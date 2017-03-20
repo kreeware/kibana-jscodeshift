@@ -60,8 +60,6 @@ export default (file, api) => {
     .filter(path => {
       const { node } = path
 
-      debugger
-
       if (shouldIgnoreNode(node)) {
         return false
       }
